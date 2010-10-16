@@ -1,0 +1,47 @@
+h1. Module ODT pour "Play framework":http://www.playframework.org
+
+Ce module est destiné à permettre un rendu de documents ODT à partir d'un template ODT et de données provenant d'un contrôleur Play.
+
+h2. Démarrer avec ce plugin
+
+1. Si ce n'est pas déjà fait, récupérez et installez une version récente de Play framework, depuis le "site du projet":http://www.playframework.org,
+ou directement à partir du "dépot de sources sur GitHub":http://github.com/playframework/play.
+
+2. Installez le module odt :
+
+bc. cd $PLAY_HOME/modules
+mkdir odt
+git clone git://github.com/bcourtine/play--odt.git .
+
+3. Tester l'application de démonstration du module :
+
+bc. cd $PLAY_HOME/modules/samples-and-tests/demoodt
+play run
+
+A l'adresse "localhost:9000/":http://localhost:9000, on trouve la page d'accueil de Play.
+Pour tester le module et obtenir un document ODT, il faut se rendre sur la page "localhost:9000/Application/demo":http://localhost:9000/Application/demo.
+
+6. Développer une application utilisant le module ODT :
+
+Créer un nouveau projet
+
+bc. play new myOdtApp
+
+Activer le module dans le fichier @conf/application.conf@ du projet :
+
+bc. module.odt=${play.path}/modules/odt
+
+h2. Récupérer les sources du projet
+
+Vous pouvez cloner le projet depuis "Github":http://github.com/bcourtine/play--odt :
+
+bc. git clone git://github.com/bcourtine/play--odt.git
+
+h2. Remonter des bugs ou des demandes d'évolution
+
+Les bugs et les demandes d'évolution du module sont à soumettre "sur GitHub":http://github.com/bcourtine/play--odt/issues.
+
+h2. Limitations actuelles du module et évolutions prévues :
+
+* Le module ne permet pas encore d'utiliser des paramètres objets et les syntaxes correspondantes, comme dans les templates de Play (@personne.nom@, @personne.prenom@, etc.)
+* Le module ne gère pas les exceptions de rendu (si un des éléments du template n'est pas passé en paramètre, par exemple)

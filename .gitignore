@@ -1,0 +1,10 @@
+# Répertoires et fichiers spécifiques d'IntelliJ IDEA
+.idea
+*.iml
+
+# Répertoire temporaire de build
+tmp
+
+# Répertoires temporaires du projet Play! de démonstration
+samples-and-tests/demoodt/tmp
+samples-and-tests/demoodt/logs
