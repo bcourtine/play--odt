@@ -1,11 +1,13 @@
 package controllers;
 
-import play.modules.odt.OdtController;
+import play.mvc.Controller;
+
+import static play.modules.odt.OdtRenderer.*;
 
 /**
- * Contrôleur de démonstration, étendant {@link play.modules.odt.OdtController}.
+ * Contrôleur de démonstration, utilisant l'import statique des méthodes de {@link play.modules.odt.OdtRenderer}.
  */
-public class Application extends OdtController {
+public class Application extends Controller {
 
 	/**
 	 * Page d'accueil par défaut

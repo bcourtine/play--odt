@@ -36,7 +36,7 @@ public class OdtRenderer {
 	 *
 	 * @param args The template data
 	 */
-	protected static void renderOdt(Object... args) {
+	public static void renderOdt(Object... args) {
 		String templateName = null;
 		if (args.length > 0 && args[0] instanceof String && LocalvariablesNamesEnhancer.LocalVariablesNamesTracer.getAllLocalVariableNames(args[0]).isEmpty()) {
 			templateName = args[0].toString();

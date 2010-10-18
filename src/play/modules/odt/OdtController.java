@@ -9,7 +9,10 @@ import play.mvc.Controller;
  *
  * @author Benoît Courtine.
  * @since 14/10/2010.
+ * @deprecated Hériter de {@link play.mvc.Controller} est une mauvaise pratique. Il vaut mieux utiliser directement
+ *             la méthode {@link play.modules.odt.OdtRenderer#renderOdt(Object...)}.
  */
+@Deprecated
 public class OdtController extends Controller {
 
 	/**
