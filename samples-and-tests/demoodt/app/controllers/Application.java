@@ -1,5 +1,6 @@
 package controllers;
 
+import models.Personne;
 import play.mvc.Controller;
 
 import static play.modules.odt.OdtRenderer.*;
@@ -17,10 +18,16 @@ public class Application extends Controller {
     }
 
 	/**
-	 * Génération du document de démonstration.
+	 * Génération du document de démonstration, avec un titre et un utilisateur (possédant un nom et un prénom).
 	 */
 	public static void demo() {
+		// Titre.
 		String titre = "Document de démonstration";
-		renderOdt(titre);
+
+		// Utilisateur.
+		Personne utilisateur = new Personne("Dupont", "Henry");
+
+		// Génération du document.
+		renderOdt(titre, utilisateur);
 	}
 }

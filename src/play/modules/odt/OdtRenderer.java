@@ -68,18 +68,18 @@ public class OdtRenderer {
 	/**
 	 * Les différents arguments passés en paramètre de la méthode de rendering sont ajoutés à la {@link java.util.Map}
 	 * des paramètres qui seront fusionnés dans le document final.
+	 * <p/>
+	 * A partir de la version 1.1, cette méthode stocke correctement dans le binding un niveau d'attributs pour les
+	 * objets complexes (permettant ainsi de passer directement ces objets à la méthode de rendu).
 	 *
 	 * @param templateName Nom du template à utiliser.
-	 * @param args		 Données passées en paramètre de la méthode de rendering.
+	 * @param args Données passées en paramètre de la méthode de rendering.
 	 */
 	protected static void renderTemplateOdt(String templateName, Object... args) {
 		// Template datas
 		Map<String, Object> templateBinding = new HashMap<String, Object>();
 		for (Object o : args) {
-			List<String> names = LocalvariablesNamesEnhancer.LocalVariablesNamesTracer.getAllLocalVariableNames(o);
-			for (String name : names) {
-				templateBinding.put(name, o);
-			}
+			templateBinding.putAll(LocalvariablesNamesEnhancer.LocalVariablesNamesTracer.getLocalVariables());
 		}
 		renderTemplateOdt(templateName, templateBinding);
 	}
