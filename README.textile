@@ -20,6 +20,8 @@ play run
 
 A l'adresse "localhost:9000/":http://localhost:9000, on trouve la page d'accueil de Play.
 Pour tester le module et obtenir un document ODT, il faut se rendre sur la page "localhost:9000/Application/demo":http://localhost:9000/Application/demo.
+Il est possible de spécifier le paramètre "numDossier" dans la requête, qui sera pris en compte dans la génération du document final :
+"localhost:9000/Application/demo?numDossier=12345":http://localhost:9000/Application/demo?numDossier=12345
 
 6. Développer une application utilisant le module ODT :
 
@@ -43,5 +45,8 @@ Les bugs et les demandes d'évolution du module sont à soumettre "sur GitHub":h
 
 h2. Limitations actuelles du module et évolutions prévues :
 
-* Le module ne permet pas encore d'utiliser des paramètres objets et les syntaxes correspondantes, comme dans les templates de Play (@personne.nom@, @personne.prenom@, etc.)
-* Le module ne gère pas les exceptions de rendu (si un des éléments du template n'est pas passé en paramètre, par exemple)
+* Le module permet d'utiliser des paramètres objets et les syntaxes correspondantes, comme dans les templates de Play (@personne.nom@, @personne.prenom@, etc.),
+mais uniquement pour les paramètres simples (String, Integer, etc.) : la syntaxe @personne.fils.nom@ ne fonctionne pas si fils est lui-même une @Personne@.
+* Le module ne gère pas les exceptions de rendu (si un des éléments du template n'est pas passé en paramètre, par exemple). Il faut donc veiller en amont,
+dans le contrôleur, que tous les paramètres du template sont bien renseignés.
+* Evolution future de ce module en "plugin Play".

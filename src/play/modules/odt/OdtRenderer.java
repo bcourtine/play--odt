@@ -94,12 +94,11 @@ public class OdtRenderer {
 	protected static void renderTemplateOdt(String templateName, Map<String, Object> args) {
 		Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
 		templateBinding.data.putAll(args);
-		// Ajout de données à la Map des informations permettant la création de rendu final.
-		templateBinding.put("session", Scope.Session.current());
-		templateBinding.put("request", Http.Request.current());
-		templateBinding.put("flash", Scope.Flash.current());
-		templateBinding.put("params", Scope.Params.current());
-		templateBinding.put("errors", Validation.errors());
+		// Ajout des données de session à la Map des informations permettant la création du rendu final.
+		templateBinding.put("session", Scope.Session.current().all());
+		// Ajout des paramètres d'appel à la Map des informations permettant la création du rendu final.
+		templateBinding.put("params", Scope.Params.current().all());
+
 		try {
 			// Chargement du template ODT à partir du fichier physique résolu depuis le nom du template.
 			DocumentTemplate template = odtTemplateLoad(templateName);
