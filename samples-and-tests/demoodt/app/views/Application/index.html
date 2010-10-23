@@ -1,4 +1,172 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
 
-#{welcome /}
+<!-- Réutilisation des styles de la page "Welcome". -->
+#{set moreStyles:'<link rel="stylesheet" href="/public/playmanual/manual.css" type="text/css" media="screen" charset="utf-8">' /}
+
+<div id="main">
+	<div id="body">
+		<div id="page">
+			<h1>Application de démonstration du plugin ODT !</h1>
+
+			<p>Bienvenue dans l'application de démonstration des différentes fonctionnalités du plugin ODT de Play.</p>
+
+			<h2><a name="why">Pourquoi cette page est-elle en français ?</a></h2>
+
+			<p>
+				Etant un développeur français, je suis plus à l'aise avec ma langue maternelle qu'avec l'anglais. Je
+				préfère donc, lorsque j'en ai la possibilité, rédiger les documentations (et les commentaires de code)
+				dans cette langue :
+			</p>
+
+			<ul>
+				<li>J'y passe moins de temps, et je peux donc me concentrer d'avantage sur les fonctionnalités et sur
+					la qualité du code.</li>
+				<li>Les phrases sont mieux rédigées, donc plus pertinentes.</li>
+			</ul>
+
+			<h2><a name="principe">Principe de fonctionnement du plugin</a></h2>
+
+			<p>
+				Ce plugin est basé sur la librairie <a href="http://jodreports.sourceforge.net/">JodReports</a> de
+				fusion de documents ODT, celle-ci s'appuyant elle-même sur la librairie
+				<a href="http://freemarker.sourceforge.net/">FreeMarker</a>.
+			</p>
+
+			<p>
+				Le plugin va récupérer différents éléments (les variables passées en paramètre de la méthode de rendu,
+				les variables de session, les paramètres de la requête HTTP), et les transformer pour les mettre dans
+				un format attendu par JodReports pour permettre la fusion.
+			</p>
+
+			<p>
+				La résolution du template à utiliser pour la fusion est effectuée dans la philosophie de Play :
+				"<em>convention over configuration</em>". Le template doit donc être dans un répertoire du nom de
+				la classe "Contrôleur", et être nommé comme la méthode de l'action appelée, avec l'extension "odt".
+			</p>
+
+			<h2><a name="fonctionnalites">Les fonctionnalités</a></h2>
+
+			<h3>L'insertion d'une variable simple</h3>
+
+			<p>
+				Par variable "simple", je veux dire "d'un type qui peut être directement inséré dans le document :
+				<em>String</em>, <em>Integer</em>, <em>Float</em>, etc.
+			</p>
+
+			<p>Côté Contrôleur :</p>
+
+<pre><code>public static void demoSimple() {
+	String titre = "Document de démonstration";
+	OdtRenderer.renderOdt(titre);
+}</code></pre>
+
+			<p>Côté template :</p>
+
+			<pre><code>&#36;{titre}</code></pre>
+
+			<p>Démonstration : <a href="/Application/demoSimple">générer et télécharger le document</a></p>
+
+			<h3>L'insertion d'une variable objet</h3>
+
+			<p>
+				Pour un véritables objet, contenant plusieurs variables, il est possible d'utiliser celles-ci pour
+				produire le document. Attention, cela n'est possible que pour les variables de types simples : il
+				n'est pas possible de parcourir plusieurs objets récursivement avec la syntaxe suivante.
+			</p>
+
+			<p>Côté Contrôleur :</p>
+
+<pre><code>public static void demoObjet() {
+	Personne utilisateur = new Personne("Dupont", "Henry", 32);
+	renderOdt(utilisateur);
+}</code></pre>
+
+			<p>Côté template :</p>
+
+<pre><code>&#36;{utilisateur.nom}
+&#36;{utilisateur.prenom}
+&#36;{utilisateur.age}</code></pre>
+
+			<p>Démonstration : <a href="/Application/demoObjet">générer et télécharger le document</a></p>
+
+			<h3>L'insertion d'une variable de session</h3>
+
+			<p>
+				Il est possible d'utiliser dans le template une variable sauvegardée en session. Celle-ci doit
+				forcément être de type simple.
+			</p>
+
+			<p>Côté Contrôleur :</p>
+
+<pre><code>public static void demoSession() {
+	Scope.Session.current().put("fonction", "Administrateur");
+	renderOdt();
+}</code></pre>
+
+			<p>Côté template :</p>
+
+			<pre><code>&#36;{session.fonction}</code></pre>
+
+			<p>Démonstration : <a href="/Application/demoSession">générer et télécharger le document</a></p>
+
+			<h3>L'insertion d'un paramètre de la requête HTTP</h3>
+
+			<p>
+				Il est possible d'utiliser dans le template une variable passé en paramètre de la requête HTTP.
+			</p>
+
+			<p>Côté Contrôleur :</p>
+
+<pre><code>public static void demoRequete() {
+	if (!Scope.Params.current()._contains("numDossier")) {
+		Scope.Params.current().put("numDossier", "Inconnu");
+	}
+	renderOdt();
+}</code></pre>
+
+			<p>Côté template :</p>
+
+			<pre><code>&#36;{params.numDossier[0]}</code></pre>
+
+			<p>
+				Démonstration : <a href="/Application/demoRequete?numDossier=123">générer et télécharger le document</a>.
+				Il est possible de spécifier le paramètre de la requête directement, et d'observer la modification dans
+				le document généré :
+			</p>
+
+			<pre><code>http://localhost:9000/Application/demoRequete?numDossier=abc</code></pre>
+
+			<h3>Boucle sur une liste de valeurs</h3>
+
+			<p>
+				Il est possible d'utiliser dans le template de boucler sur une liste d'objets, dont la taille n'est
+				pas connue à l'avance. Cette fonctinnalité n'est disponible que pour les listes d'objets de types
+				simples.
+			</p>
+
+			<p>
+				Il est possible de maintenir cette liste et de l'utiliser à partir d'une propriété d'un objet, ou
+				d'une variable de session.
+			</p>
+
+			<p>Côté Contrôleur :</p>
+
+<pre><code>public static void demoListe() {
+	List&lt;String&gt; prenoms = new ArrayList&lt;String&gt;();
+	prenoms.add("Thomas");
+	prenoms.add("Stéphanie");
+	prenoms.add("Jules");
+	prenoms.add("Virginie");
+	renderOdt(prenoms);
+}</code></pre>
+
+			<p>Côté template :</p>
+
+<pre><code>[&#35;list prenoms as prenom]&#36;{prenom}
+[/&#35;list]</code></pre>
+
+			<p>Démonstration : <a href="/Application/demoListe">générer le document</a>.</p>
+		</div>
+	</div>
+</div>

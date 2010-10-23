@@ -4,6 +4,9 @@ import models.Personne;
 import play.mvc.Controller;
 import play.mvc.Scope;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static play.modules.odt.OdtRenderer.*;
 
 /**
@@ -12,40 +15,58 @@ import static play.modules.odt.OdtRenderer.*;
 public class Application extends Controller {
 
 	/**
-	 * Page d'accueil par défaut
+	 * Page d'accueil : guide de l'applicaion de démonstration.
 	 */
     public static void index() {
         render();
     }
 
 	/**
-	 * Génération du document de démonstration, contenant des éléments paramétrés provenant de différentes sources :
-	 * <ul>
-	 * <li>Un titre simple (chaîne de caractères) passé explicitement à la méthode de rendu.</li>
-	 * <li>Un objet de utilisateur (contenant un nom, un prénom, et un âge), passé explicitement à la méthode de rendu.</li>
-	 * <li>Une fonction, stockée en session.</li>
-	 * <li>Un numéro de dossier, passé en paramètre de la requête.</li>
-	 * </ul>
+	 * Génération d'un document de démonstration, contenant uniquement une variable simple de type texte.
 	 */
-	public static void demo() {
-		// Titre.
+	public static void demoSimple() {
 		String titre = "Document de démonstration";
+		renderOdt(titre);
+	}
 
-		// Utilisateur.
+	/**
+	 * Génération d'un document de démonstration, affichant plusieurs propriétés d"un unique objet
+	 * {@link models.Personne}.
+	 */
+	public static void demoObjet() {
 		Personne utilisateur = new Personne("Dupont", "Henry", 32);
+		renderOdt(utilisateur);
+	}
 
-		// Ajout à la session de l'utilisateur courant la fonction "Administrateur".
+	/**
+	 * Génération d'un document de démonstration, affichant une valeur sauvegardée en session.
+	 */
+	public static void demoSession() {
 		Scope.Session.current().put("fonction", "Administrateur");
+		renderOdt();
+	}
 
+	/**
+	 * Génération d'un document de démonstration, affichant une valeur passée en paramètre de la requête HTTP.
+	 */
+	public static void demoRequete() {
 		// Récupération du numéro de dossier de la requête, "Inconnu" si non spécifié (pour assurer le bon
 		// fonctionnement de la génération du document qui ne permet pas les paramètres non renseignés).
 		if (!Scope.Params.current()._contains("numDossier")) {
 			Scope.Params.current().put("numDossier", "Inconnu");
 		}
+		renderOdt();
+	}
 
-		// Génération du document, à partir du titre et de l'utilisateur. Les paramètres de la requête et de la
-		// session sont pris en compte automatiquement dans la fusion sans qu'il soit nécessaire de les passer
-		// explicitement à la méthode de rendu.
-		renderOdt(titre, utilisateur);
+	/**
+	 * Génération d'un document de démonstration, affichant une liste de prénoms.
+	 */
+	public static void demoListe() {
+		List<String> prenoms = new ArrayList<String>();
+		prenoms.add("Thomas");
+		prenoms.add("Stéphanie");
+		prenoms.add("Jules");
+		prenoms.add("Virginie");
+		renderOdt(prenoms);
 	}
 }
