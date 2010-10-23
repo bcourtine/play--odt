@@ -4,7 +4,6 @@ import net.sf.jooreports.templates.DocumentTemplate;
 import net.sf.jooreports.templates.DocumentTemplateFactory;
 import play.Play;
 import play.classloading.enhancers.LocalvariablesNamesEnhancer;
-import play.data.validation.Validation;
 import play.exceptions.PlayException;
 import play.exceptions.TemplateNotFoundException;
 import play.exceptions.UnexpectedException;
@@ -14,7 +13,6 @@ import play.vfs.VirtualFile;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -71,16 +69,18 @@ public class OdtRenderer {
 	 * <p/>
 	 * A partir de la version 1.1, cette méthode stocke correctement dans le binding un niveau d'attributs pour les
 	 * objets complexes (permettant ainsi de passer directement ces objets à la méthode de rendu).
-	 *
+	 * <p/>
+	 * Le paramètre "args" est bien utilisé dans cette méthode, par l'injection de code effectuée par
+	 * {@link play.classloading.enhancers.LocalvariablesNamesEnhancer}.
+	 * 
 	 * @param templateName Nom du template à utiliser.
 	 * @param args Données passées en paramètre de la méthode de rendering.
 	 */
+	@SuppressWarnings("unused")
 	protected static void renderTemplateOdt(String templateName, Object... args) {
 		// Template datas
 		Map<String, Object> templateBinding = new HashMap<String, Object>();
-		for (Object o : args) {
-			templateBinding.putAll(LocalvariablesNamesEnhancer.LocalVariablesNamesTracer.getLocalVariables());
-		}
+		templateBinding.putAll(LocalvariablesNamesEnhancer.LocalVariablesNamesTracer.getLocalVariables());
 		renderTemplateOdt(templateName, templateBinding);
 	}
 
